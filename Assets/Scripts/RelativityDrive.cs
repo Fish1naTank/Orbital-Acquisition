@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class ShipGravity : MonoBehaviour
+public class RelativityDrive : MonoBehaviour
 {
-    public GameObject[] CelestialBodies;
-    public float force = 10;
+    public Orbit[] CelestialBodies;
+    public float gravitationalConstant = 1;
 
     public GameObject lineObject;
     public int lineLength;
@@ -45,26 +45,29 @@ public class ShipGravity : MonoBehaviour
 
         if (clossestObject != null)
         {
+            //calculate addForce
             Vector3 forceDirection = clossestObject.transform.position - this.transform.position;
 
-            float pullforce = clossestObject.transform.localScale.x / forceDirection.magnitude * force;
+            float pullforce = clossestObject.transform.localScale.x / forceDirection.magnitude * clossestObject.transform.localScale.x * gravitationalConstant;
 
             Vector3 addForce = forceDirection.normalized * pullforce * Time.deltaTime;
 
+            Vector3 LineVelocity = rb.velocity;
+
             rb.AddForce(addForce);
 
-            Vector3 LineVelocity = rb.velocity;
             Vector3 newLinePosition = this.transform.position + LineVelocity;
 
             if(trackPath)
             {
+                //recalculate addForce for each line object
                 for (int i = 0; i < lineLength; i++)
                 {
                     lineObjects[i].transform.position = newLinePosition;
 
                     forceDirection = clossestObject.transform.position - lineObjects[i].transform.position;
 
-                    pullforce = clossestObject.transform.localScale.x / forceDirection.magnitude * force;
+                    pullforce = clossestObject.transform.localScale.x / forceDirection.magnitude * clossestObject.transform.localScale.x * gravitationalConstant;
 
                     addForce = forceDirection.normalized * pullforce * Time.deltaTime;
 
@@ -77,17 +80,29 @@ public class ShipGravity : MonoBehaviour
 
     private void findClossestBody()
     {
-        foreach (GameObject body in CelestialBodies)
+        foreach (Orbit body in CelestialBodies)
         {
             if (clossestObject == null)
             {
-                clossestObject = body;
+                clossestObject = body.gameObject;
                 return;
             }
 
             if ((this.transform.position - body.transform.position).sqrMagnitude < (this.transform.position - clossestObject.transform.position).sqrMagnitude)
             {
-                clossestObject = body;
+                if(clossestObject != body)
+                {
+                    //make CelestialBodies orbit relative to clossest object
+                    Orbit oldCenter = clossestObject.GetComponent<Orbit>();
+
+                    oldCenter.target = body.transform;
+                    oldCenter.orbitSpeed = body.orbitSpeed;
+                    oldCenter.orbitClockwise = body.orbitClockwise;
+
+                    body.target = null;
+
+                    clossestObject = body.gameObject;
+                }
             }
         }
     }

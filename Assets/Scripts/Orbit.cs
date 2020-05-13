@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,18 +7,24 @@ public class Orbit : MonoBehaviour
 {
     public Transform target;
     public float orbitSpeed = 2;
-    public bool orbitClockwise = true;
+    public bool orbitClockwise = false;
 
     private Vector3 offset;
     private Vector3 axis;
 
     void Start()
     {
-        if(target == null)
+        if (target == null)
         {
-            target = this.transform;
+            axis = Vector3.zero;
+            return;
         }
 
+        setAxis();
+    }
+
+    private void setAxis()
+    {
         offset = this.transform.position - target.transform.position;
 
         Vector3 worldVector;
@@ -41,6 +48,16 @@ public class Orbit : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(target == null)
+        {
+            axis = Vector3.zero;
+            return;
+        }
+        else if(axis == Vector3.zero)
+        {
+            setAxis();
+        }
+
         //update postiton
         this.transform.position = target.transform.position + offset;
 
