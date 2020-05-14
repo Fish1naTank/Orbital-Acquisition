@@ -731,7 +731,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpaceObjectsToSpawn:
   - {fileID: 5845567444340753467, guid: 551ebf8742ed27244abb655948d8d75f, type: 3}
-  numberOfObjectsToSpawn: 300
+  numberOfObjectsToSpawn: 100
   distFromCenter: {x: 300, y: 400, z: 100}
 --- !u!1 &728691392
 GameObject:
