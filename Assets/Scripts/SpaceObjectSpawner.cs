@@ -8,7 +8,7 @@ public class SpaceObjectSpawner : MonoBehaviour
 {
     public GameObject[] SpaceObjectsToSpawn;
     public int numberOfObjectsToSpawn = 100;
-    public Vector2 distFromCenter = new Vector2(500, 800);
+    public Vector3 distFromCenter = new Vector3(300, 400, 100);
 
     void Start()
     {
@@ -28,9 +28,6 @@ public class SpaceObjectSpawner : MonoBehaviour
             spaceObject = Instantiate(SpaceObjectsToSpawn[Random.Range(0, SpaceObjectsToSpawn.Length)], pos, rot);
             //set object size
             spaceObject.transform.localScale = new Vector3(1, 1, 1) * Random.Range(3, 10);
-            //set object orbit
-            Orbit spaceObjectOrbit = spaceObject.GetComponent<Orbit>();
-            spaceObjectOrbit.target = this.transform;
         }
     }
 
@@ -39,8 +36,10 @@ public class SpaceObjectSpawner : MonoBehaviour
         float ang = Random.value * 360;
         Vector3 pos;
 
+        float donutRange = distFromCenter.z * 0.5f;
+
         pos.x = center.x + radius * Mathf.Sin(ang * Mathf.Deg2Rad);
-        pos.y = center.y + Random.Range(0, distFromCenter.y - distFromCenter.x);
+        pos.y = center.y + Random.Range(-donutRange, donutRange);
         pos.z = center.z + radius * Mathf.Cos(ang * Mathf.Deg2Rad);
 
         return pos;

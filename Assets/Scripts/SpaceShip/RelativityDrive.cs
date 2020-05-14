@@ -6,7 +6,6 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class RelativityDrive : MonoBehaviour
 {
-    public Orbit[] CelestialBodies;
     public float gravitationalConstant = 1;
 
     public GameObject lineObject;
@@ -14,7 +13,7 @@ public class RelativityDrive : MonoBehaviour
     public float spacing;
     private bool trackPath = false;
 
-    private GameObject clossestObject;
+    public CelestialBody ClossestBody;
     private List<GameObject> lineObjects;
     private Rigidbody rb;
 
@@ -43,35 +42,31 @@ public class RelativityDrive : MonoBehaviour
     {
         findClossestBody();
 
-        if (clossestObject != null)
+        if (ClossestBody != null)
         {
-            //calculate addForce
-            Vector3 forceDirection = clossestObject.transform.position - this.transform.position;
-
-            float pullforce = clossestObject.transform.localScale.x / forceDirection.magnitude * clossestObject.transform.localScale.x * gravitationalConstant;
-
-            Vector3 addForce = forceDirection.normalized * pullforce * Time.deltaTime;
+            //calculate acceleration
+            float sqrDist = (ClossestBody.transform.position - rb.position).sqrMagnitude;
+            Vector3 forceDirection = (ClossestBody.transform.position - rb.position).normalized;
+            Vector3 acceleration = forceDirection * Universe.gravitationalConstant * ClossestBody.mass / sqrDist;
 
             Vector3 LineVelocity = rb.velocity;
 
-            rb.AddForce(addForce);
+            rb.AddForce(acceleration);
 
             Vector3 newLinePosition = this.transform.position + LineVelocity;
 
             if(trackPath)
             {
-                //recalculate addForce for each line object
+                //recalculate acceleration for each line object
                 for (int i = 0; i < lineLength; i++)
                 {
                     lineObjects[i].transform.position = newLinePosition;
 
-                    forceDirection = clossestObject.transform.position - lineObjects[i].transform.position;
+                    sqrDist = (ClossestBody.transform.position - lineObjects[i].transform.position).sqrMagnitude;
+                    forceDirection = (ClossestBody.transform.position - lineObjects[i].transform.position).normalized;
+                    acceleration = forceDirection * Universe.gravitationalConstant * ClossestBody.mass / sqrDist;
 
-                    pullforce = clossestObject.transform.localScale.x / forceDirection.magnitude * clossestObject.transform.localScale.x * gravitationalConstant;
-
-                    addForce = forceDirection.normalized * pullforce * Time.deltaTime;
-
-                    LineVelocity += addForce / spacing;
+                    LineVelocity += acceleration * spacing;
                     newLinePosition += LineVelocity;
                 }
             }
@@ -80,28 +75,23 @@ public class RelativityDrive : MonoBehaviour
 
     private void findClossestBody()
     {
-        foreach (Orbit body in CelestialBodies)
+        foreach (CelestialBody body in Universe.CelestialBodies)
         {
-            if (clossestObject == null)
+            if (ClossestBody == null)
             {
-                clossestObject = body.gameObject;
+                ClossestBody = body;
+                transform.parent = body.transform;
                 return;
             }
 
-            if ((this.transform.position - body.transform.position).sqrMagnitude < (this.transform.position - clossestObject.transform.position).sqrMagnitude)
+            if ((transform.position - body.transform.position).sqrMagnitude < (transform.position - ClossestBody.transform.position).sqrMagnitude)
             {
-                if(clossestObject != body)
+                if(ClossestBody != body)
                 {
-                    //make CelestialBodies orbit relative to clossest object
-                    Orbit oldCenter = clossestObject.GetComponent<Orbit>();
+                    //make ourmovemnt relative to clossest object
+                    transform.parent = body.transform;
 
-                    oldCenter.target = body.transform;
-                    oldCenter.orbitSpeed = body.orbitSpeed;
-                    oldCenter.orbitClockwise = body.orbitClockwise;
-
-                    body.target = null;
-
-                    clossestObject = body.gameObject;
+                    ClossestBody = body;
                 }
             }
         }

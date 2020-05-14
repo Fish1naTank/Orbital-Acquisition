@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(Fuel))]
 public class ShipThruster : MonoBehaviour
 {
-    public GameObject playerCamera;
+    public Camera playerCamera;
     public Rigidbody playerShip;
 
     public float thrusterForce = 20;
