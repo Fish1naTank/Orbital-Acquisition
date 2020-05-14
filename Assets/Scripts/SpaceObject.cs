@@ -12,9 +12,13 @@ public class SpaceObject : MonoBehaviour
     private FixedOrbit _clossestBodyOrbit;
     private Rigidbody rb;
 
+    private Universe universe;
+
     // Start is called before the first frame update
     void Start()
     {
+        universe = FindObjectOfType<Universe>();
+
         rb = GetComponent<Rigidbody>();
 
         findClossestBody();
@@ -31,7 +35,7 @@ public class SpaceObject : MonoBehaviour
 
     private void findClossestBody()
     {
-        foreach (CelestialBody body in Universe.CelestialBodies)
+        foreach (CelestialBody body in universe.CelestialBodies)
         {
 
             if (_clossestBody == null ||

@@ -17,9 +17,12 @@ public class RelativityDrive : MonoBehaviour
     private List<GameObject> lineObjects;
     private Rigidbody rb;
 
+    private Universe universe;
 
     void Start()
     {
+        universe = FindObjectOfType<Universe>();
+
         rb = GetComponent<Rigidbody>();
 
         lineObjects = new List<GameObject>();
@@ -75,7 +78,7 @@ public class RelativityDrive : MonoBehaviour
 
     private void findClossestBody()
     {
-        foreach (CelestialBody body in Universe.CelestialBodies)
+        foreach (CelestialBody body in universe.CelestialBodies)
         {
             if (ClossestBody == null)
             {
