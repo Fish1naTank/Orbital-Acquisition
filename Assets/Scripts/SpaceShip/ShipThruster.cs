@@ -28,6 +28,7 @@ public class ShipThruster : MonoBehaviour
 
         if (_shipFuel.FuelRemaining > 0)
         {
+            _shipFuel.UpdateActiveThrusters(GetActiveThrusterCount());
             thrust();
         }
     }

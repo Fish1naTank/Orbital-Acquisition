@@ -6,9 +6,10 @@ using UnityEngine.UI;
 
 public class Fuel : MonoBehaviour
 {
-    public ShipThruster Thrusters;
     public Image FuelImage;
     private RectTransform FuelImageTransform;
+
+    public int activeThrusters = 0;
 
     public float fuelMax = 500;
     public float fuelmin = 0;
@@ -26,8 +27,6 @@ public class Fuel : MonoBehaviour
 
     void Update()
     {
-        int activeThrusters = Thrusters.GetActiveThrusterCount();
-
         if(activeThrusters > 0)
         {
             burnFuel(activeThrusters);
@@ -36,6 +35,11 @@ public class Fuel : MonoBehaviour
 
             setFuelImageColor();
         }
+    }
+
+    public void UpdateActiveThrusters(int thrusterCount)
+    {
+        activeThrusters = thrusterCount;
     }
 
     private void burnFuel(int activeThrusters)
