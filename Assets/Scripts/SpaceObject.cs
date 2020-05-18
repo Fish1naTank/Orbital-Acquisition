@@ -8,6 +8,8 @@ public class SpaceObject : MonoBehaviour
 {
     public bool orbitClockwise = false;
 
+    public bool giveOrbitVelocity = true;
+
     public CelestialBody _clossestBody;
     private FixedOrbit _clossestBodyOrbit;
     private Rigidbody rb;
@@ -23,7 +25,7 @@ public class SpaceObject : MonoBehaviour
 
         findClossestBody();
 
-        calculateOrbitalVelocity();
+        if(giveOrbitVelocity) calculateOrbitalVelocity();
     }
 
     void FixedUpdate()
