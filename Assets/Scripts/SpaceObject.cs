@@ -10,15 +10,17 @@ public class SpaceObject : MonoBehaviour
 
     public bool giveOrbitVelocity = true;
 
+    public bool trackPath = false;
+    [ColorUsage(true, true)]
+    public Color pathColor;
     public GameObject lineObject;
     public int lineLength;
     public float spacing;
-    public bool trackPath = false;
 
+    public Rigidbody rb { get; private set; }
     public CelestialBody ClossestBody;
     private FixedOrbit _clossestBodyOrbit;
     private GameObject[] lineObjects;
-    private Rigidbody rb;
 
     private Universe universe;
 
@@ -29,26 +31,19 @@ public class SpaceObject : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
 
-        if (lineObject != null)
-        {
-            lineObjects = new GameObject[lineLength];
-            for (int i = 0; i < lineObjects.Length; i++)
-            {
-                lineObjects[i] = (Instantiate(lineObject));
-            }
-        }
+        createPathCubes();
 
         findClossestBody();
 
         if(giveOrbitVelocity) calculateOrbitalVelocity();
     }
 
+
     void FixedUpdate()
     {
         findClossestBody();
         addForce();
     }
-
 
     private void findClossestBody()
     {
@@ -100,6 +95,21 @@ public class SpaceObject : MonoBehaviour
 
         Vector3 orbitalForce = forceVector.normalized * Mathf.Sqrt(Universe.gravitationalConstant * ClossestBody.mass / meToCelestial.magnitude);
         rb.AddForce(orbitalForce, ForceMode.VelocityChange);
+    }
+
+    private void createPathCubes()
+    {
+        if (lineObject != null)
+        {
+            lineObjects = new GameObject[lineLength];
+            for (int i = 0; i < lineObjects.Length; i++)
+            {
+                GameObject pathObj;
+                pathObj = Instantiate(lineObject);
+                pathObj.GetComponent<Renderer>().material.SetColor("_EmissionColor", pathColor);
+                lineObjects[i] = (pathObj);
+            }
+        }
     }
 
     private void addForce()
