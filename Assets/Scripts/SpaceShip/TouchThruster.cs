@@ -154,9 +154,9 @@ public class TouchThruster : MonoBehaviour
     {
         float multiplier = getRotationMultiplier();
 
-        Vector3 rotationForce = -transform.forward * (direction ? 1 : -1) * multiplier;
+        Vector3 rotationForce = -Vector3.forward * (direction ? 1 : -1) * multiplier * 0.5f;
 
-        //shipRigidbody.AddRelativeTorque(rotationForce);
+        shipRigidbody.AddRelativeTorque(rotationForce);
     }
 
     private float getMovementMultiplier()

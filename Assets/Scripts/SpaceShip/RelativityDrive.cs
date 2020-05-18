@@ -11,10 +11,10 @@ public class RelativityDrive : MonoBehaviour
     public GameObject lineObject;
     public int lineLength;
     public float spacing;
-    private bool trackPath = false;
+    public bool trackPath = false;
 
     public CelestialBody ClossestBody;
-    private List<GameObject> lineObjects;
+    private GameObject[] lineObjects;
     private Rigidbody rb;
 
     private Universe universe;
@@ -25,11 +25,10 @@ public class RelativityDrive : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
 
-        lineObjects = new List<GameObject>();
-
-        for (int i = 0; i < lineLength; i++)
+        lineObjects = new GameObject[lineLength];
+        for (int i = 0; i < lineObjects.Length; i++)
         {
-            lineObjects.Add(Instantiate(lineObject));
+            lineObjects[i] = (Instantiate(lineObject));
         }
     }
 
@@ -56,12 +55,12 @@ public class RelativityDrive : MonoBehaviour
 
             rb.AddForce(acceleration);
 
-            Vector3 newLinePosition = this.transform.position + LineVelocity;
+            Vector3 newLinePosition = transform.position + LineVelocity;
 
-            if(trackPath)
+            if(trackPath && lineObjects != null)
             {
                 //recalculate acceleration for each line object
-                for (int i = 0; i < lineLength; i++)
+                for (int i = 0; i < lineObjects.Length; i++)
                 {
                     lineObjects[i].transform.position = newLinePosition;
 
