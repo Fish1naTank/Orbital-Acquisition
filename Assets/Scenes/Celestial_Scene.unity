@@ -4917,6 +4917,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 469634959, guid: fe8821b75851b854fa90b66378d5742e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2192636541847474975, guid: fe8821b75851b854fa90b66378d5742e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4950,7 +4954,7 @@ PrefabInstance:
     - target: {fileID: 3570855232302339828, guid: fe8821b75851b854fa90b66378d5742e,
         type: 3}
       propertyPath: preciseMovementMultiplier
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3570855232302339828, guid: fe8821b75851b854fa90b66378d5742e,
         type: 3}
