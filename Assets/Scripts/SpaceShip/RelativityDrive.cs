@@ -4,18 +4,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(LineRenderer))]
 public class RelativityDrive : MonoBehaviour
 {
     public float gravitationalConstant = 1;
 
-    public GameObject lineObject;
-    public int lineLength;
-    public float spacing;
     public bool trackPath = false;
+    [ColorUsage(true, true)]
+    public Color pathColor;
+    public int lineNodeCount = 100;
 
     public CelestialBody ClossestBody;
-    private GameObject[] lineObjects;
     private Rigidbody rb;
+    private LineRenderer lr;
 
     private Universe universe;
 
@@ -25,11 +26,9 @@ public class RelativityDrive : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
 
-        lineObjects = new GameObject[lineLength];
-        for (int i = 0; i < lineObjects.Length; i++)
-        {
-            lineObjects[i] = (Instantiate(lineObject));
-        }
+        lr = GetComponent<LineRenderer>();
+        lr.startColor = pathColor;
+        lr.endColor = pathColor;
     }
 
     void Update()
@@ -44,36 +43,9 @@ public class RelativityDrive : MonoBehaviour
     {
         findClossestBody();
 
-        if (ClossestBody != null)
-        {
-            //calculate acceleration
-            float sqrDist = (ClossestBody.transform.position - rb.position).sqrMagnitude;
-            Vector3 forceDirection = (ClossestBody.transform.position - rb.position).normalized;
-            Vector3 acceleration = forceDirection * Universe.gravitationalConstant * ClossestBody.mass / sqrDist;
-
-            Vector3 LineVelocity = rb.velocity;
-
-            rb.AddForce(acceleration);
-
-            Vector3 newLinePosition = transform.position + LineVelocity;
-
-            if(trackPath && lineObjects != null)
-            {
-                //recalculate acceleration for each line object
-                for (int i = 0; i < lineObjects.Length; i++)
-                {
-                    lineObjects[i].transform.position = newLinePosition;
-
-                    sqrDist = (ClossestBody.transform.position - lineObjects[i].transform.position).sqrMagnitude;
-                    forceDirection = (ClossestBody.transform.position - lineObjects[i].transform.position).normalized;
-                    acceleration = forceDirection * Universe.gravitationalConstant * ClossestBody.mass / sqrDist;
-
-                    LineVelocity += acceleration * spacing;
-                    newLinePosition += LineVelocity;
-                }
-            }
-        }
+        addForce();
     }
+
 
     private void findClossestBody()
     {
@@ -95,6 +67,44 @@ public class RelativityDrive : MonoBehaviour
 
                     ClossestBody = body;
                 }
+            }
+        }
+    }
+
+    private void addForce()
+    {
+        if (ClossestBody != null)
+        {
+            //calculate acceleration
+            float sqrDist = (ClossestBody.transform.position - rb.position).sqrMagnitude;
+            Vector3 forceDirection = (ClossestBody.transform.position - rb.position).normalized;
+            Vector3 acceleration = forceDirection * Universe.gravitationalConstant * ClossestBody.mass / sqrDist;
+
+            rb.AddForce(acceleration, ForceMode.Acceleration);
+
+            Vector3 NodeVelocity = rb.velocity;
+            Vector3 newNodePosition = rb.position + NodeVelocity;
+
+            if (trackPath)
+            {
+                if (lr.positionCount != lineNodeCount) lr.positionCount = lineNodeCount;
+
+                Vector3[] orbitPositions = new Vector3[lineNodeCount];
+
+                //recalculate acceleration for each line node
+                for (int i = 0; i < lineNodeCount; i++)
+                {
+                    orbitPositions[i] = newNodePosition;
+
+                    sqrDist = (ClossestBody.transform.position - orbitPositions[i]).sqrMagnitude;
+                    forceDirection = (ClossestBody.transform.position - orbitPositions[i]).normalized;
+                    acceleration = forceDirection * Universe.gravitationalConstant * ClossestBody.mass / sqrDist;
+
+                    NodeVelocity += acceleration;
+                    newNodePosition += NodeVelocity;
+                }
+
+                lr.SetPositions(orbitPositions);
             }
         }
     }

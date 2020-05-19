@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(LineRenderer))]
 public class SpaceObject : MonoBehaviour
 {
     public bool orbitClockwise = false;
@@ -13,14 +14,12 @@ public class SpaceObject : MonoBehaviour
     public bool trackPath = false;
     [ColorUsage(true, true)]
     public Color pathColor;
-    public GameObject lineObject;
-    public int lineLength;
-    public float spacing;
+    public int lineNodeCount = 100;
 
     public Rigidbody rb { get; private set; }
     public CelestialBody ClossestBody;
+    private LineRenderer lr;
     private FixedOrbit _clossestBodyOrbit;
-    private GameObject[] lineObjects;
 
     private Universe universe;
 
@@ -31,7 +30,10 @@ public class SpaceObject : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
 
-        createPathCubes();
+        lr = GetComponent<LineRenderer>();
+        lr.positionCount = lineNodeCount;
+        lr.startColor = pathColor;
+        lr.endColor = pathColor;
 
         findClossestBody();
 
@@ -42,6 +44,7 @@ public class SpaceObject : MonoBehaviour
     void FixedUpdate()
     {
         findClossestBody();
+
         addForce();
     }
 
@@ -97,21 +100,6 @@ public class SpaceObject : MonoBehaviour
         rb.AddForce(orbitalForce, ForceMode.VelocityChange);
     }
 
-    private void createPathCubes()
-    {
-        if (lineObject != null)
-        {
-            lineObjects = new GameObject[lineLength];
-            for (int i = 0; i < lineObjects.Length; i++)
-            {
-                GameObject pathObj;
-                pathObj = Instantiate(lineObject);
-                pathObj.GetComponent<Renderer>().material.SetColor("_EmissionColor", pathColor);
-                lineObjects[i] = (pathObj);
-            }
-        }
-    }
-
     private void addForce()
     {
         Vector3 meToCelestial = ClossestBody.transform.position - transform.position;
@@ -119,26 +107,31 @@ public class SpaceObject : MonoBehaviour
         Vector3 forceDirection = meToCelestial.normalized;
         Vector3 acceleration = forceDirection * Universe.gravitationalConstant * ClossestBody.mass / sqrDist;
 
-        Vector3 LineVelocity = rb.velocity;
-
         rb.AddForce(acceleration, ForceMode.Acceleration);
 
-        Vector3 newLinePosition = transform.position + LineVelocity;
+        Vector3 NodeVelocity = rb.velocity;
+        Vector3 newNodePosition = transform.position + NodeVelocity;
 
-        if (trackPath && lineObjects != null)
+        if (trackPath)
         {
-            //recalculate acceleration for each line object
-            for (int i = 0; i < lineObjects.Length; i++)
-            {
-                lineObjects[i].transform.position = newLinePosition;
+            if(lr.positionCount != lineNodeCount) lr.positionCount = lineNodeCount;
 
-                sqrDist = (ClossestBody.transform.position - lineObjects[i].transform.position).sqrMagnitude;
-                forceDirection = (ClossestBody.transform.position - lineObjects[i].transform.position).normalized;
+            Vector3[] orbitPositions = new Vector3[lineNodeCount];
+
+            //recalculate acceleration for each line node
+            for (int i = 0; i < lineNodeCount; i++)
+            {
+                orbitPositions[i] = newNodePosition;
+
+                sqrDist = (ClossestBody.transform.position - orbitPositions[i]).sqrMagnitude;
+                forceDirection = (ClossestBody.transform.position - orbitPositions[i]).normalized;
                 acceleration = forceDirection * Universe.gravitationalConstant * ClossestBody.mass / sqrDist;
 
-                LineVelocity += acceleration * spacing;
-                newLinePosition += LineVelocity;
+                NodeVelocity += acceleration;
+                newNodePosition += NodeVelocity;
             }
+
+            lr.SetPositions(orbitPositions);
         }
     }
 }
