@@ -11,6 +11,9 @@ public class PathLock : MonoBehaviour
     //speed, altitude, angle
     public Vector3 TargetLocks;
 
+    public float lockRange = 1;
+
+    public bool enableAltitudeLock = false;
     public bool altitudeLocked = false;
 
     void FixedUpdate()
@@ -35,8 +38,10 @@ public class PathLock : MonoBehaviour
 
     private void restrictAltitude()
     {
+        if (!enableAltitudeLock) return;
+
         Vector3 celestialToShip = shipRigidbody.transform.position - TargetObject.ClossestBody.transform.position;
-        if (celestialToShip.magnitude > TargetLocks.y || altitudeLocked)
+        if (altitudeLocked || celestialToShip.magnitude + lockRange > TargetLocks.y && celestialToShip.magnitude - lockRange < TargetLocks.y)
         {
             Vector3 lockPos = celestialToShip.normalized * TargetLocks.y;
             shipRigidbody.transform.position = lockPos;
@@ -49,5 +54,12 @@ public class PathLock : MonoBehaviour
 
             altitudeLocked = true;
         }
+    }
+
+    public void ToggleAltitudeLock()
+    {
+        enableAltitudeLock = !enableAltitudeLock;
+        altitudeLocked = false;
+
     }
 }
