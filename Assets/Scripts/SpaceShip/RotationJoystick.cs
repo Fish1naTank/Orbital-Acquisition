@@ -8,6 +8,7 @@ public class RotationJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     public Camera shipCam;
     public TouchThruster TouchThruster;
 
+    public float deadzone = 0.1f;
     private Vector2 inputVector;
 
     public RectTransform LookStick;
@@ -44,7 +45,26 @@ public class RotationJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         if(inputVector != Vector2.zero)
         {
             Vector2 rotationVector = new Vector2(-inputVector.y, inputVector.x);
-            TouchThruster.LookThruster(rotationVector);
+
+            Debug.Log(rotationVector);
+            bool xDead = false;
+            bool yDead = false;
+            if(rotationVector.x < deadzone && rotationVector.x > -deadzone)
+            {
+                rotationVector.x = 0;
+                xDead = true;
+            }
+
+            if (rotationVector.y < deadzone && rotationVector.y > -deadzone)
+            {
+                rotationVector.y = 0;
+                yDead = true;
+            }
+
+            if (!xDead || !yDead)
+            {
+                TouchThruster.LookThruster(rotationVector);
+            }
         }
     }
 }

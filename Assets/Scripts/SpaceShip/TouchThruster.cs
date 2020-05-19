@@ -36,11 +36,28 @@ public class TouchThruster : MonoBehaviour
     
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.M))
+        
+    }
+
+    void FixedUpdate()
+    {
+        Inputs();
+
+        if (!mouseLook.Active)
         {
-            //mouseLook.ToggleActive();
+            //adjust rotation
+            Vector3 newRotation = Vector3.zero;
+            newRotation.x = (Mathf.Abs(shipRigidbody.angularVelocity.x) > maxAngularVelocity) ? maxAngularVelocity * (shipRigidbody.angularVelocity.x > 0 ? 1 : -1) : shipRigidbody.angularVelocity.x;
+            newRotation.y = (Mathf.Abs(shipRigidbody.angularVelocity.y) > maxAngularVelocity) ? maxAngularVelocity * (shipRigidbody.angularVelocity.y > 0 ? 1 : -1) : shipRigidbody.angularVelocity.y;
+            newRotation.z = (Mathf.Abs(shipRigidbody.angularVelocity.z) > maxAngularVelocity) ? maxAngularVelocity * (shipRigidbody.angularVelocity.z > 0 ? 1 : -1) : shipRigidbody.angularVelocity.z;
+
+            shipRigidbody.angularVelocity = newRotation;
         }
 
+    }
+
+    private void Inputs()
+    {
         if (Input.GetKey(KeyCode.W))
         {
             YAxisThruster(true);
@@ -87,21 +104,6 @@ public class TouchThruster : MonoBehaviour
             _shipFuel.UpdateActiveThrusters(_activeThrusterCount);
             _activeThrusterCount = 0;
         }
-    }
-
-    void FixedUpdate()
-    {
-        if (!mouseLook.Active)
-        {
-            //adjust rotation
-            Vector3 newRotation = Vector3.zero;
-            newRotation.x = (Mathf.Abs(shipRigidbody.angularVelocity.x) > maxAngularVelocity) ? maxAngularVelocity * (shipRigidbody.angularVelocity.x > 0 ? 1 : -1) : shipRigidbody.angularVelocity.x;
-            newRotation.y = (Mathf.Abs(shipRigidbody.angularVelocity.y) > maxAngularVelocity) ? maxAngularVelocity * (shipRigidbody.angularVelocity.y > 0 ? 1 : -1) : shipRigidbody.angularVelocity.y;
-            newRotation.z = (Mathf.Abs(shipRigidbody.angularVelocity.z) > maxAngularVelocity) ? maxAngularVelocity * (shipRigidbody.angularVelocity.z > 0 ? 1 : -1) : shipRigidbody.angularVelocity.z;
-
-            shipRigidbody.angularVelocity = newRotation;
-        }
-
     }
 
     public void TogglePreciseMovement()
