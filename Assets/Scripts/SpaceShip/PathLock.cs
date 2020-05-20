@@ -18,6 +18,8 @@ public class PathLock : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (TargetObject == null) return;
+
         getTargetLocks();
 
         restrictAltitude();

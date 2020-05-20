@@ -6,7 +6,7 @@ public class DebrisPickup : MonoBehaviour
 {
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.name == "SpaceDebris(Clone)")
+        if(other.gameObject.tag == "SpaceDebris")
         {
             Destroy(other.gameObject);
         }

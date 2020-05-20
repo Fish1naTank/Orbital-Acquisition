@@ -46,7 +46,6 @@ public class RotationJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         {
             Vector2 rotationVector = new Vector2(-inputVector.y, inputVector.x);
 
-            Debug.Log(rotationVector);
             bool xDead = false;
             bool yDead = false;
             if(rotationVector.x < deadzone && rotationVector.x > -deadzone)
