@@ -11,6 +11,7 @@ public class TouchThruster : MonoBehaviour
     public Camera shipCam;
     public Rigidbody shipRigidbody;
     public RelativityDrive relativityDrive;
+    public DifficultyController difficultyController;
 
     //Movement Variables
     public bool preciseMovement = true;
@@ -54,6 +55,70 @@ public class TouchThruster : MonoBehaviour
     }
 
     private void Inputs()
+    {
+        switch (difficultyController.difficulty)
+        {
+            case DifficultyController.Difficulty.Normal:
+                normalInputs();
+                break;
+            case DifficultyController.Difficulty.Hard:
+                hardInputs();
+                break;
+            case DifficultyController.Difficulty.Simulation:
+                simulationInputs();
+                break;
+        }
+
+        if (_shipFuel.FuelRemaining > 0)
+        {
+            _shipFuel.UpdateActiveThrusters(_activeThrusterCount);
+            _activeThrusterCount = 0;
+        }
+    }
+
+    private void normalInputs()
+    {
+        if (Input.GetKey(KeyCode.E))
+        {
+            RollThruster(true);
+        }
+        else if (Input.GetKey(KeyCode.Q))
+        {
+            RollThruster(false);
+        }
+
+        if (Input.GetKey(KeyCode.X))
+        {
+            AltitudeThruster(true);
+        }
+        else if (Input.GetKey(KeyCode.Z))
+        {
+            AltitudeThruster(false);
+        }
+    }
+
+    private void hardInputs()
+    {
+        if (Input.GetKey(KeyCode.E))
+        {
+            RollThruster(true);
+        }
+        else if (Input.GetKey(KeyCode.Q))
+        {
+            RollThruster(false);
+        }
+
+        if (Input.GetKey(KeyCode.X))
+        {
+            OrbitThruster(true);
+        }
+        else if (Input.GetKey(KeyCode.Z))
+        {
+            OrbitThruster(false);
+        }
+    }
+
+    private void simulationInputs()
     {
         if (Input.GetKey(KeyCode.W))
         {
@@ -99,12 +164,6 @@ public class TouchThruster : MonoBehaviour
         {
             OrbitThruster(false);
         }
-
-        if (_shipFuel.FuelRemaining > 0)
-        {
-            _shipFuel.UpdateActiveThrusters(_activeThrusterCount);
-            _activeThrusterCount = 0;
-        }
     }
 
     public void TogglePreciseMovement()
@@ -149,6 +208,18 @@ public class TouchThruster : MonoBehaviour
         addMoveThrusterForce(movementForce);
     }
 
+    public void AltitudeThruster(bool direction)
+    {
+        Vector3 celestialToMe = shipRigidbody.transform.position - relativityDrive.ClossestBody.transform.position;
+
+        shipRigidbody.transform.position += celestialToMe.normalized * (direction ? 1 : -1) * Time.deltaTime * getMovementMultiplier();
+
+        //use thuster
+        addMoveThrusterForce(Vector3.zero);
+        //set orbital velocity
+        shipRigidbody.velocity = calculateOrbitalVelocity();
+    }
+
     public void TogglePreciseRotation()
     {
         preciseRotation = !preciseRotation;
@@ -186,5 +257,30 @@ public class TouchThruster : MonoBehaviour
     {
         _activeThrusterCount += 1;
         shipRigidbody.AddForce(movementForce);
+    }
+
+    private Vector3 calculateOrbitalVelocity()
+    {
+        bool orbitClockwise = false;
+
+        Vector3 meToCelestial = relativityDrive.ClossestBody.transform.position - shipRigidbody.transform.position;
+
+        //save transform
+        Quaternion rotation = transform.rotation;
+        Vector3 position = transform.position;
+
+        transform.forward = meToCelestial.normalized;
+
+        //get orbit vector
+        Vector3 forceVector = transform.right;
+        if (orbitClockwise) forceVector = -forceVector;
+
+        //reset transform
+        transform.position = position;
+        transform.rotation = rotation;
+
+        Vector3 orbitalForce = forceVector.normalized * Mathf.Sqrt(Universe.gravitationalConstant * relativityDrive.ClossestBody.mass / meToCelestial.magnitude);
+
+        return orbitalForce;
     }
 }
