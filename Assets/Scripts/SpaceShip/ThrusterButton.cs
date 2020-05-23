@@ -6,7 +6,7 @@ using UnityEngine;
 public class ThrusterButton : MonoBehaviour
 {
     public TouchThruster TouchThruster;
-    public enum MovementAxis { X, Y, Z, Pitch, Yaw, Roll}
+    public enum MovementAxis { X, Y, Z, Pitch, Yaw, Roll, Orbit }
     public MovementAxis movementAxis;
     public bool direction = true;
 
@@ -45,6 +45,9 @@ public class ThrusterButton : MonoBehaviour
                 break;
             case MovementAxis.Roll:
                 TouchThruster.RollThruster(direction);
+                break;
+            case MovementAxis.Orbit:
+                TouchThruster.OrbitThruster(direction);
                 break;
         }
     }

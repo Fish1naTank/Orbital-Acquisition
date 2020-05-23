@@ -10,7 +10,7 @@ public class TouchThruster : MonoBehaviour
 {
     public Camera shipCam;
     public Rigidbody shipRigidbody;
-    public MouseLook mouseLook;
+    public RelativityDrive relativityDrive;
 
     //Movement Variables
     public bool preciseMovement = true;
@@ -42,17 +42,14 @@ public class TouchThruster : MonoBehaviour
     void FixedUpdate()
     {
         Inputs();
+        
+        //adjust rotation
+        Vector3 newRotation = Vector3.zero;
+        newRotation.x = (Mathf.Abs(shipRigidbody.angularVelocity.x) > maxAngularVelocity) ? maxAngularVelocity * (shipRigidbody.angularVelocity.x > 0 ? 1 : -1) : shipRigidbody.angularVelocity.x;
+        newRotation.y = (Mathf.Abs(shipRigidbody.angularVelocity.y) > maxAngularVelocity) ? maxAngularVelocity * (shipRigidbody.angularVelocity.y > 0 ? 1 : -1) : shipRigidbody.angularVelocity.y;
+        newRotation.z = (Mathf.Abs(shipRigidbody.angularVelocity.z) > maxAngularVelocity) ? maxAngularVelocity * (shipRigidbody.angularVelocity.z > 0 ? 1 : -1) : shipRigidbody.angularVelocity.z;
 
-        if (!mouseLook.Active)
-        {
-            //adjust rotation
-            Vector3 newRotation = Vector3.zero;
-            newRotation.x = (Mathf.Abs(shipRigidbody.angularVelocity.x) > maxAngularVelocity) ? maxAngularVelocity * (shipRigidbody.angularVelocity.x > 0 ? 1 : -1) : shipRigidbody.angularVelocity.x;
-            newRotation.y = (Mathf.Abs(shipRigidbody.angularVelocity.y) > maxAngularVelocity) ? maxAngularVelocity * (shipRigidbody.angularVelocity.y > 0 ? 1 : -1) : shipRigidbody.angularVelocity.y;
-            newRotation.z = (Mathf.Abs(shipRigidbody.angularVelocity.z) > maxAngularVelocity) ? maxAngularVelocity * (shipRigidbody.angularVelocity.z > 0 ? 1 : -1) : shipRigidbody.angularVelocity.z;
-
-            shipRigidbody.angularVelocity = newRotation;
-        }
+        shipRigidbody.angularVelocity = newRotation;
 
     }
 
@@ -94,9 +91,13 @@ public class TouchThruster : MonoBehaviour
             RollThruster(false);
         }
 
-        if (mouseLook.Active)
+        if (Input.GetKey(KeyCode.X))
         {
-            this.transform.rotation = shipCam.transform.rotation;
+            OrbitThruster(true);
+        }
+        else if (Input.GetKey(KeyCode.Z))
+        {
+            OrbitThruster(false);
         }
 
         if (_shipFuel.FuelRemaining > 0)
@@ -134,6 +135,16 @@ public class TouchThruster : MonoBehaviour
         float multiplier = getMovementMultiplier();
 
         Vector3 movementForce = transform.forward * (direction ? 1 : -1) * multiplier;
+
+        addMoveThrusterForce(movementForce);
+    }
+
+    public void OrbitThruster(bool direction)
+    {
+        float multiplier = getMovementMultiplier();
+
+        Vector3 thrustDirection = shipRigidbody.velocity.normalized;
+        Vector3 movementForce = thrustDirection * (direction ? 1 : -1) * multiplier;
 
         addMoveThrusterForce(movementForce);
     }

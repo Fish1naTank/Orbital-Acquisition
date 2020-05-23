@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Universe : MonoBehaviour
 {
-    public static float gravitationalConstant = 400;
+    public static float gravitationalConstant = 500;
     public CelestialBody[] CelestialBodies;
 
 
