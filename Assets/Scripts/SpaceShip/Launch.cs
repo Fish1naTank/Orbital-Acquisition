@@ -10,6 +10,7 @@ public class Launch : MonoBehaviour
     public bool launchCompleate { get; private set; }
 
     public GameObject launchButton;
+    public RelativityDrive relativityDrive;
     public CelestialBody planet;
     public float targetAltitude;
     public bool orbitClockwise = false;
@@ -46,6 +47,11 @@ public class Launch : MonoBehaviour
     public void InitiateLaunch()
     {
         startLaunch = true;
+
+        if (relativityDrive != null)
+        {
+            relativityDrive.trackPath = true;
+        }
     }
 
     private void executeLaunch()
@@ -70,7 +76,7 @@ public class Launch : MonoBehaviour
             thrustVector = thrustVector.normalized * thrustForce;
             if (currentAltitude - startingAltitude > (targetAltitude - startingAltitude) * 0.1f)
             {
-                rb.AddForce(targetVelocityVector.normalized);
+                //rb.AddForce(targetVelocityVector.normalized);
             }
             else
             {

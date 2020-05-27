@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class LevelLoader : MonoBehaviour
 {
-    public Text difficultyText;
+    public Text SceneText;
 
     void Start()
     {
@@ -34,6 +34,6 @@ public class LevelLoader : MonoBehaviour
 
     private void updateDifficultyText()
     {
-        difficultyText.text = "difficulty : " + SceneManager.GetActiveScene().name;
+        SceneText.text = SceneManager.GetActiveScene().name;
     }
 }

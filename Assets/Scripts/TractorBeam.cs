@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class TractorBeam : MonoBehaviour
 {
+    public GameObject orbitShip;
+
     public float shrinkSpeed = 0.1f;
 
     private List<GameObject> itemsToCollect;
@@ -18,12 +20,14 @@ public class TractorBeam : MonoBehaviour
     {
         if (other.gameObject.tag == "SpaceDebris")
         {
+            other.gameObject.SendMessage("PickUp", SendMessageOptions.DontRequireReceiver);
+            other.gameObject.transform.SetParent(orbitShip.transform);
             itemsToCollect.Add(other.gameObject);
         }
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         foreach (GameObject debris in itemsToCollect.ToList())
         {

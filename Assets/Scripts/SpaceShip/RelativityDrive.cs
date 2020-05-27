@@ -7,8 +7,6 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class RelativityDrive : MonoBehaviour
 {
-    public float gravitationalConstant = 1;
-
     public bool trackPath = false;
     [ColorUsage(true, true)]
     public Color pathColor;

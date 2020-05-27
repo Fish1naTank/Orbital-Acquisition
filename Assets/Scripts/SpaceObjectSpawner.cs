@@ -10,6 +10,8 @@ public class SpaceObjectSpawner : MonoBehaviour
     public int numberOfObjectsToSpawn = 100;
     public Vector3 distFromCenter = new Vector3(300, 400, 100);
 
+    public bool varyingObjectSize = false;
+
     void Start()
     {
         Transform parentTransform = this.GetComponentInParent<Transform>();
@@ -26,8 +28,14 @@ public class SpaceObjectSpawner : MonoBehaviour
             Quaternion rot = Quaternion.FromToRotation(Vector3.forward, center - pos);
             GameObject spaceObject;
             spaceObject = Instantiate(SpaceObjectsToSpawn[Random.Range(0, SpaceObjectsToSpawn.Length)], pos, rot);
+
             //set object size
-            spaceObject.transform.localScale = new Vector3(1, 1, 1) * Random.Range(3, 10);
+            Vector3 size = Vector3.one;
+            if(varyingObjectSize)
+            {
+                size *= Random.Range(3, 10);
+            }
+            spaceObject.transform.localScale = size;
         }
     }
 

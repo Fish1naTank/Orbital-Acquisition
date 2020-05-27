@@ -9,6 +9,6 @@ public class CelestialBody : MonoBehaviour
 
     void OnValidate()
     {
-        mass = transform.localScale.x;
+        mass = transform.localScale.x * transform.localScale.x;
     }
 }

@@ -43,9 +43,9 @@ public class SpaceObject : MonoBehaviour
 
     void FixedUpdate()
     {
-        findClossestBody();
+      findClossestBody();
 
-        addForce();
+      addForce();
     }
 
     private void findClossestBody()

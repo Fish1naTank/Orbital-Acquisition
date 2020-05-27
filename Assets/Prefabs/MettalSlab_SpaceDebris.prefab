@@ -15,7 +15,8 @@ GameObject:
   - component: {fileID: 9158132518276904444}
   - component: {fileID: -2378671387134251404}
   - component: {fileID: -6675716666774792163}
-  m_Layer: 0
+  - component: {fileID: 8197437518860644079}
+  m_Layer: 8
   m_Name: MettalSlab_SpaceDebris
   m_TagString: SpaceDebris
   m_Icon: {fileID: 0}
@@ -228,6 +229,24 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!114 &8197437518860644079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5845567444340753467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e82c74214befe814a81eb70d4f2c4e77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orbitClockwise: 0
+  giveOrbitVelocity: 1
+  trackPath: 0
+  pathColor: {r: 0, g: 0, b: 0, a: 0}
+  lineNodeCount: 100
+  ClossestBody: {fileID: 0}
 --- !u!1001 &3197335641872134907
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -309,6 +328,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: sheetmetal
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 45900e9dc978dd4479e5880211d03d84,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 45900e9dc978dd4479e5880211d03d84, type: 3}
