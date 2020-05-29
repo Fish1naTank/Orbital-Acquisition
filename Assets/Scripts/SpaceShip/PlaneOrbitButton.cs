@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlaneOrbitButton : MonoBehaviour
 {
     public PlaneOrbitController planeOrbitController;
-    public enum MovementAxis { X, Y, Roll }
+    public enum MovementAxis { X, Y, Roll, Boost }
     public MovementAxis movementAxis;
     public bool direction = true;
 
@@ -26,7 +26,18 @@ public class PlaneOrbitButton : MonoBehaviour
     {
         if(isPressed)
         {
-            activateThruster();
+            if (movementAxis == MovementAxis.Boost)
+            {
+                planeOrbitController.ActiveBoost(true);
+            }
+            else
+            {
+                activateThruster();
+            }
+        }
+        else if (movementAxis == MovementAxis.Boost)
+        {
+            planeOrbitController.ActiveBoost(false);
         }
     }
 

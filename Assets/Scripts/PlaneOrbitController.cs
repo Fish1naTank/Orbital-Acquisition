@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(ThrusterBoost))]
 public class PlaneOrbitController : MonoBehaviour
 {
-    public Camera cam;
+    public Transform ship;
     public Rigidbody orbitShipRigidbody;
 
     public float moveSpeed = 5;
@@ -16,6 +16,7 @@ public class PlaneOrbitController : MonoBehaviour
     public float maxOrbitShipDistance = 50;
 
     private ThrusterBoost thusterBoost;
+    private bool boost = false;
 
     void Start()
     {
@@ -42,12 +43,17 @@ public class PlaneOrbitController : MonoBehaviour
 
         if (orbitShipRigidbody.velocity.sqrMagnitude > 5)
         {
-            cam.transform.LookAt(cam.transform.position + orbitShipRigidbody.velocity.normalized, cam.transform.up);
+            ship.LookAt(ship.position + orbitShipRigidbody.velocity.normalized, ship.up);
         }
     }
 
     private void Movement()
     {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            ActiveBoost(true);
+        }
+
         if (Input.GetKey(KeyCode.D))
         {
             XMoveDirection(true);
@@ -68,40 +74,54 @@ public class PlaneOrbitController : MonoBehaviour
             YMoveDirection(false);
         }
 
-        Vector3 centerToMe = cam.transform.position - orbitShipRigidbody.transform.position;
+        Vector3 centerToMe = ship.position - orbitShipRigidbody.transform.position;
         float dist = centerToMe.magnitude;
         if (dist > maxOrbitShipDistance)
         {
-            cam.transform.position = orbitShipRigidbody.transform.position + centerToMe.normalized * maxOrbitShipDistance;
+            ship.position = orbitShipRigidbody.transform.position + centerToMe.normalized * maxOrbitShipDistance;
         }
+    }
+
+    public void ActiveBoost(bool active)
+    {
+        boost = active;
     }
 
     public void XMoveDirection(bool direction)
     {
-        Vector3 moveDirection = cam.transform.right * Time.deltaTime * (direction ? 1 : -1) * GetMoveSpeed();
-        cam.transform.position += moveDirection;
+        Vector3 moveDirection = ship.right * Time.deltaTime * (direction ? 1 : -1) * GetMoveSpeed();
+        ship.position += moveDirection;
     }
 
     public void YMoveDirection(bool direction)
     {
-        Vector3 moveDirection = cam.transform.up * Time.deltaTime * (direction ? 1 : -1) * GetMoveSpeed();
-        cam.transform.position += moveDirection;
+        Vector3 moveDirection = ship.up * Time.deltaTime * (direction ? 1 : -1) * GetMoveSpeed();
+        ship.position += moveDirection;
+    }
+
+    public void VectorMoveDirection(Vector2 direction)
+    {
+        Vector3 moveDirection = (ship.right * direction.x + ship.up * direction.y) * Time.deltaTime * GetMoveSpeed();
+        ship.position += moveDirection;
     }
 
     public void Roll(bool direction)
     {
         float angle = Time.deltaTime * (direction ? 1 : -1) * rollSpeed;
 
-        cam.transform.Rotate(-Vector3.forward, angle);
+        ship.Rotate(-Vector3.forward, angle);
     }
 
     private float GetMoveSpeed()
     {
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (boost)
         {
+            ActiveBoost(false);
+
             thusterBoost.UpdateActiveThrusters(1);
             return moveSpeed * boostMultiplier;
         }
+
         return moveSpeed;
     }
 }
