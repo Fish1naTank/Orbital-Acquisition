@@ -12,6 +12,7 @@ public class ColorToggle : MonoBehaviour
     public Color onColor;
 
     public bool startState = false;
+    public bool permanent = false;
 
     private Image image;
     private bool on = false;
@@ -27,7 +28,17 @@ public class ColorToggle : MonoBehaviour
 
     public void OnPointerUp()
     {
-        on = !on;
+        if (permanent)
+        {
+            if (!on)
+            {
+                on = true;
+            }
+        }
+        else
+        {
+            on = !on;
+        }
 
         updateColor();
     }

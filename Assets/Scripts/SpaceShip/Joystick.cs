@@ -6,16 +6,36 @@ using UnityEngine.EventSystems;
 public class Joystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
     public PlaneOrbitController shipController;
+    public UITweener joysticAnimator;
+    public UITweener nextAnimator;
 
     public float deadzone = 0.01f;
+    public Vector2 outputVector;
     private Vector2 inputVector;
 
     public RectTransform MoveStick;
     public RectTransform MoveRing;
 
+    private bool tutoAnim = true;
+
     public void OnPointerDown(PointerEventData eventData)
     {
         OnDrag(eventData);
+
+        if (joysticAnimator != null)
+        {
+            if (joysticAnimator.gameObject.activeSelf)
+            {
+                if (tutoAnim)
+                {
+                    joysticAnimator.Disabe();
+
+                    if (nextAnimator != null) nextAnimator.gameObject.SetActive(true);
+
+                    tutoAnim = false;
+                }
+            }
+        }
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -35,7 +55,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
             inputVector = pos;
             inputVector = (pos.magnitude > 1) ? pos.normalized : pos;
 
-            MoveStick.anchoredPosition = new Vector2(inputVector.x * MoveStick.sizeDelta.x, inputVector.y * MoveStick.sizeDelta.y);
+            MoveStick.anchoredPosition = new Vector2(inputVector.x * MoveRing.sizeDelta.x, inputVector.y * MoveRing.sizeDelta.y) * 0.5f;
         }
     }
 
@@ -59,8 +79,13 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
             if (!xDead || !yDead)
             {
-                shipController.VectorMoveDirection(inputVector);
+                outputVector = inputVector;
+                shipController.VectorMoveDirection(outputVector);
             }
+        }
+        else
+        {
+            outputVector = Vector2.zero;
         }
     }
 }

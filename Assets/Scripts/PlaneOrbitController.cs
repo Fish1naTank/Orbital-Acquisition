@@ -114,6 +114,11 @@ public class PlaneOrbitController : MonoBehaviour
 
     private float GetMoveSpeed()
     {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            ActiveBoost(true);
+        }
+
         if (boost)
         {
             ActiveBoost(false);
