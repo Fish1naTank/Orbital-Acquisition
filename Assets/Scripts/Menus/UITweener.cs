@@ -28,8 +28,11 @@ public class UITweener : MonoBehaviour
     public Vector3 to;
 
     public bool showOnEnable;
+    public bool destroyOnCompleate = false;
 
     private LTDescr tweenObject;
+
+    private bool direction = true;
 
     public void OnEnable()
     {
@@ -55,7 +58,14 @@ public class UITweener : MonoBehaviour
         }
         else if(pingpong)
         {
-            tweenObject.setLoopPingPong(1);
+            if ((tweenObject.loopCount ^ 1) == tweenObject.loopCount + 1)
+            {
+                tweenObject.loopCount = 1;
+            }
+            else
+            {
+                tweenObject.loopCount = 2;
+            }
         }
         else if(loop)
         {
@@ -64,9 +74,17 @@ public class UITweener : MonoBehaviour
 
         tweenObject.setOnComplete(() =>
         {
-            SwapDirection();
+            if (!pingpong && !loop)
+            {
+                SwapDirection();
+            }
             LeanTween.cancel(objectToAnimate);
             gameObject.SetActive(false);
+
+            if(destroyOnCompleate)
+            {
+                Destroy(gameObject);
+            }
         });
     }
 
@@ -75,6 +93,8 @@ public class UITweener : MonoBehaviour
         var tmp = from;
         from = to;
         to = from;
+
+        direction = !direction;
     }
 
     private void HandleTween()

@@ -15,6 +15,8 @@ public class PlaneOrbitController : MonoBehaviour
 
     public float maxOrbitShipDistance = 50;
 
+    public Joystick joystick;
+
     private ThrusterBoost thusterBoost;
     private bool boost = false;
 
@@ -54,6 +56,7 @@ public class PlaneOrbitController : MonoBehaviour
             ActiveBoost(true);
         }
 
+        /**
         if (Input.GetKey(KeyCode.D))
         {
             XMoveDirection(true);
@@ -72,6 +75,12 @@ public class PlaneOrbitController : MonoBehaviour
         if (Input.GetKey(KeyCode.S))
         {
             YMoveDirection(false);
+        }
+        /**/
+
+        if(joystick != null)
+        {
+            VectorMoveDirection(joystick.outputVector);
         }
 
         Vector3 centerToMe = ship.position - orbitShipRigidbody.transform.position;

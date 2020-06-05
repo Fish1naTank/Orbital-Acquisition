@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 
 public class Joystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
-    public PlaneOrbitController shipController;
     public UITweener joysticAnimator;
     public UITweener nextAnimator;
 
@@ -80,7 +79,6 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
             if (!xDead || !yDead)
             {
                 outputVector = inputVector;
-                shipController.VectorMoveDirection(outputVector);
             }
         }
         else
