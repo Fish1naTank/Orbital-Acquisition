@@ -7,6 +7,9 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Text))]
 public class PlayerScore : MonoBehaviour
 {
+    public Text addScoreText;
+    public UITweener addScoreAnimator;
+
     public int runningScore = 100;
 
     public int score { get; private set; }
@@ -43,9 +46,15 @@ public class PlayerScore : MonoBehaviour
         }
     }
 
-    public void AddScore(int runningScore)
+    public void AddScore(int points)
     {
-        score += runningScore;
+        score += points;
+
+        if (Math.Abs(points) > runningScore)
+        {
+            UpdateAddScoreText(points);
+        }
+
         UpdateScoreText();
     }
 
@@ -55,8 +64,26 @@ public class PlayerScore : MonoBehaviour
         gameStart = true;
     }
 
+    private void UpdateAddScoreText(int points)
+    {
+        string pointsStr = points.ToString();
+        if (points > 0)
+        {
+            pointsStr = "+" + points.ToString();
+            addScoreText.color = Color.green;
+        }
+        else
+        {
+            pointsStr = points.ToString();
+            addScoreText.color = Color.red;
+        }
+
+        addScoreText.text = pointsStr;
+        addScoreAnimator.Show();
+    }
+
     private void UpdateScoreText()
     {
-        scoreText.text = "SCORE: " + score.ToString();
+        scoreText.text = score.ToString();
     }
 }

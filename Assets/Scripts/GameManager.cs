@@ -44,6 +44,11 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
+    public void SetName(string name)
+    {
+        playerName = name;
+    }
+
     public void LogScore(HighscoreManager highscoreManager)
     {
         if (scoreLogged == true) return;

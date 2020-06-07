@@ -28,6 +28,7 @@ public class UITweener : MonoBehaviour
     public Vector3 to;
 
     public bool showOnEnable;
+    public bool showOnDisable;
     public bool destroyOnCompleate = false;
 
     private LTDescr tweenObject;
@@ -39,6 +40,16 @@ public class UITweener : MonoBehaviour
         if(showOnEnable)
         {
             Show();
+        }
+    }
+
+    public void OnDisable()
+    {
+        if (showOnDisable)
+        {
+            SwapDirection();
+            Show();
+            SwapDirection();
         }
     }
 
@@ -92,7 +103,7 @@ public class UITweener : MonoBehaviour
     {
         var tmp = from;
         from = to;
-        to = from;
+        to = tmp;
 
         direction = !direction;
     }

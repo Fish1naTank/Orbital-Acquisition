@@ -50,15 +50,18 @@ public class HighscoreTable : MonoBehaviour
         highscoresEntryList = new List<HighscoreEntry>();
         highscoresTransformList = new List<Transform>();
 
-        var highscores = highscoreManager.LoadHighscores();
-        if (highscores != null)
+        if (highscoreManager != null)
         {
-            highscoresEntryList = highscores.highscoresList;
-        }
+            var highscores = highscoreManager.LoadHighscores();
+            if (highscores != null)
+            {
+                highscoresEntryList = highscores.highscoresList;
+            }
 
-        foreach (HighscoreEntry highscore in highscoresEntryList)
-        {
-            CreateHighscoreEntry(highscore, entryContainer, entryTemplate, highscoresTransformList);
+            foreach (HighscoreEntry highscore in highscoresEntryList)
+            {
+                CreateHighscoreEntry(highscore, entryContainer, entryTemplate, highscoresTransformList);
+            }
         }
     }
 
