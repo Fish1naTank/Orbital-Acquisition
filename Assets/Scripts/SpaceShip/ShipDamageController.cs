@@ -7,17 +7,34 @@ public class ShipDamageController : MonoBehaviour
 {
     public GameObject damageAnimator;
     public PlayerScore score;
-    public int damagePoints = -1250;
+    public int damagePoints;
+
+    public float immunityTime = 1;
+    private bool immune = false;
 
     void OnTriggerEnter(Collider collider)
     {
         if(collider.gameObject.tag == "Satellite")
         {
-            DamageShip();
+            StartCoroutine(DamageShip());
         }
     }
 
-    private void DamageShip()
+    private IEnumerator DamageShip()
+    {
+        if (!immune)
+        {
+            ApplyDamage();
+            immune = true;
+        }
+        else
+        {
+            yield return new WaitForSeconds(immunityTime);
+            immune = false;
+        }
+    }
+
+    private void ApplyDamage()
     {
         damageAnimator.SetActive(true);
         score.AddScore(damagePoints);

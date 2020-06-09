@@ -34,6 +34,7 @@ public class UITweener : MonoBehaviour
     private LTDescr tweenObject;
 
     private bool direction = true;
+    private bool disabling = false;
 
     public void OnEnable()
     {
@@ -60,7 +61,8 @@ public class UITweener : MonoBehaviour
 
     public void Disabe()
     {
-        if (!gameObject.activeSelf) return;
+        if (disabling || !gameObject.activeSelf) return;
+        disabling = true;
 
         if (!pingpong && !loop)
         {
@@ -91,6 +93,7 @@ public class UITweener : MonoBehaviour
             }
             LeanTween.cancel(objectToAnimate);
             gameObject.SetActive(false);
+            disabling = false;
 
             if(destroyOnCompleate)
             {

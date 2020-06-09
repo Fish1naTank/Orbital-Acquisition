@@ -9,7 +9,7 @@ public class TractorBeam : MonoBehaviour
     public GameObject orbitShip;
     public PlayerScore playerScore;
 
-    public int debrisPoints = 2500;
+    public int debrisPoints = 1250;
     public float shrinkSpeed = 0.1f;
 
     private List<GameObject> itemsToCollect;
