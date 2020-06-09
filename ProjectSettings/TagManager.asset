@@ -6,7 +6,6 @@ TagManager:
   tags:
   - SpaceDebris
   - Satellite
-  - Satelite
   layers:
   - Default
   - TransparentFX
