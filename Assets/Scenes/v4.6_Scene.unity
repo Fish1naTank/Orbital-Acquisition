@@ -1688,6 +1688,11 @@ PrefabInstance:
       propertyPath: to.x
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 3842603771014818030, guid: bb72ffe9a46b1a740a61a30257d4e26a,
+        type: 3}
+      propertyPath: deadzone
+      value: 0.02
+      objectReference: {fileID: 0}
     - target: {fileID: 4640694766895423361, guid: bb72ffe9a46b1a740a61a30257d4e26a,
         type: 3}
       propertyPath: m_RenderMode
