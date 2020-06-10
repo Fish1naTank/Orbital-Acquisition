@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance { get; private set; }
 
-    public static int GameplayLength = 240;
+    public static int GameplayLength = 1;
 
     public string playerName { get; private set; } = "SAM";
     public int gameScore { get; private set; }

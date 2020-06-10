@@ -2,12 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(CinemaManager))]
 public class MenuManager : MonoBehaviour
 {
     public GameObject[] menuDisplays;
 
     public HighscoreManager highscoreManager;
     public HighscoreTable highscoreTable;
+
+    private CinemaManager videoPlayer;
+
+    void Awake()
+    {
+        videoPlayer = GetComponent<CinemaManager>();
+    }
 
     void Start()
     {
@@ -26,5 +34,10 @@ public class MenuManager : MonoBehaviour
 
         GameManager.instance.LogScore(highscoreManager);
         highscoreTable.UpdateTable();
+
+        if (menuToDisplay == 1)
+        {
+            videoPlayer.PlayOutro();
+        }
     }
 }

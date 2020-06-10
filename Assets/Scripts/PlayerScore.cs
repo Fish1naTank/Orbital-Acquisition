@@ -10,6 +10,9 @@ public class PlayerScore : MonoBehaviour
     public Text addScoreText;
     public UITweener addScoreAnimator;
 
+    public Image timerImage;
+    private RectTransform timerImageTransform;
+
     public int runningScore = 100;
 
     public int score { get; private set; }
@@ -23,6 +26,10 @@ public class PlayerScore : MonoBehaviour
     void Awake()
     {
         scoreText = GetComponent<Text>();
+
+        timerImageTransform = timerImage.rectTransform;
+        setTimerImageColor(GameManager.GameplayLength);
+        //timerImageTransform.sizeDelta = new Vector2(timerImageTransform.sizeDelta.x, GameManager.GameplayLength);
     }
 
     void FixedUpdate()
@@ -43,6 +50,11 @@ public class PlayerScore : MonoBehaviour
                 gameStart = false;
                 GameManager.instance.EndGame(score);
             }
+
+            float timeLeft = GameManager.GameplayLength - elapsedTime;
+            timerImageTransform.sizeDelta = new Vector2(timerImageTransform.sizeDelta.x, timeLeft);
+
+            setTimerImageColor(timeLeft);
         }
     }
 
@@ -85,5 +97,10 @@ public class PlayerScore : MonoBehaviour
     private void UpdateScoreText()
     {
         scoreText.text = score.ToString();
+    }
+
+    private void setTimerImageColor(float timeLeft)
+    {
+        timerImage.color = Color.Lerp(Color.red, Color.green, timeLeft / GameManager.GameplayLength);
     }
 }
