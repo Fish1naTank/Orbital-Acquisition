@@ -1,10 +1,13 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(SpaceObject), typeof(BoxCollider))]
 public class SpaceDebris : MonoBehaviour
 {
+    public GameObject Highlight;
+
     Rigidbody rb;
     SpaceObject spaceObject;
     BoxCollider boxCollider;
@@ -21,5 +24,15 @@ public class SpaceDebris : MonoBehaviour
         spaceObject.enabled = false;
         boxCollider.enabled = false;
         rb.velocity = Vector3.zero;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        Highlight.SetActive(true);
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        Highlight.SetActive(false);
     }
 }

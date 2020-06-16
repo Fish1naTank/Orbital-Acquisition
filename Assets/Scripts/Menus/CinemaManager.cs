@@ -6,14 +6,17 @@ using UnityEngine.Video;
 
 public class CinemaManager : MonoBehaviour
 {
-    public GameObject introPanel;
-    public VideoPlayer introPlayer;
+    public GameObject introPanelBoy;
+    public VideoPlayer introPlayerBoy;
+    public GameObject introPanelGirl;
+    public VideoPlayer introPlayerGirl;
     public GameObject outroPanel;
     public VideoPlayer outroPlayer;
 
     void Start()
     {
-        introPlayer.loopPointReached += CheckIntroOver;
+        introPlayerBoy.loopPointReached += CheckIntroOver;
+        introPlayerGirl.loopPointReached += CheckIntroOver;
         outroPlayer.loopPointReached += CheckOutroOver;
     }
 
@@ -31,7 +34,14 @@ public class CinemaManager : MonoBehaviour
 
     public void PlayIntro()
     {
-        introPanel.SetActive(true);
+        if(GameManager.instance.characterGirl)
+        {
+            introPanelGirl.SetActive(true);
+        }
+        else
+        {
+            introPanelBoy.SetActive(true);
+        }
     }
 
     public void PlayOutro()
@@ -41,7 +51,14 @@ public class CinemaManager : MonoBehaviour
 
     public void Play()
     {
-        introPlayer.loopPointReached -= CheckIntroOver;
+        if(GameManager.instance.characterGirl)
+        {
+            introPlayerGirl.loopPointReached -= CheckIntroOver;
+        }
+        else
+        {
+            introPlayerBoy.loopPointReached -= CheckIntroOver;
+        }
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }

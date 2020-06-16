@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 [RequireComponent(typeof(HighscoreManager))]
 public class HighscoreTable : MonoBehaviour
@@ -77,8 +78,8 @@ public class HighscoreTable : MonoBehaviour
         entry.anchoredPosition = new Vector3(0, -templateHeight * placement);
         entry.gameObject.SetActive(true);
 
-        entry.Find("Score").GetComponent<Text>().text = highscoreEntry.score.ToString();
-        entry.Find("Name").GetComponent<Text>().text = highscoreEntry.name;
+        entry.Find("Score").GetComponent<TMP_Text>().text = highscoreEntry.score.ToString();
+        entry.Find("Name").GetComponent<TMP_Text>().text = highscoreEntry.name;
 
         if (highscores != null)
         {

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public enum MenuScreens { Main, Highscore }
+public enum GameDifficulty { Easy, Normal }
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class GameManager : MonoBehaviour
 
     public static int GameplayLength = 150;
 
+    public GameDifficulty difficulty { get; private set; } = GameDifficulty.Easy;
+
+    public bool characterGirl { get; private set; } = true;
     public string playerName { get; private set; } = "SAM";
     public int gameScore { get; private set; }
     public bool scoreLogged { get; private set; } = true;
@@ -47,6 +51,24 @@ public class GameManager : MonoBehaviour
     public void SetName(string name)
     {
         playerName = name;
+    }
+
+    public void SetCharacter(bool isGirl)
+    {
+        characterGirl = isGirl;
+    }
+
+    public void SetDifficulty(int newDifficulty)
+    {
+        switch (newDifficulty)
+        {
+            case 0:
+                difficulty = GameDifficulty.Easy;
+                break;
+            case 1:
+                difficulty = GameDifficulty.Normal;
+                break;
+        }
     }
 
     public void LogScore(HighscoreManager highscoreManager)

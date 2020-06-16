@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 public class InputName : MonoBehaviour
 {
-    public Text inputText;
+    public TMP_Text inputText;
 
     public void SetName()
     {

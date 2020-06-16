@@ -50,7 +50,7 @@ public class Launch : MonoBehaviour
 
         if (relativityDrive != null)
         {
-            relativityDrive.trackPath = true;
+            //relativityDrive.trackPath = true;
         }
     }
 
