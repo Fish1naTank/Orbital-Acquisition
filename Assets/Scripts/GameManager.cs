@@ -40,6 +40,12 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void ReturnToMenu()
+    {
+        menuDisplay = MenuScreens.Main;
+        SceneManager.LoadScene(0);
+    }
+
     public void EndGame(int score)
     {
         gameScore = score;

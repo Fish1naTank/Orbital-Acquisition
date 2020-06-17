@@ -11,14 +11,18 @@ public class ThrusterBoost : MonoBehaviour
 
     public int activeThrusters = 0;
 
-    public float maxBoost = 500;
-    public float minBoost = 0;
-    public float consumptionRate = 1;
-    public float regenRate = 1;
+    public float boostAvailableThreshold = 20;
+
+    public float maxBoost = 500f;
+    public float minBoost = 0f;
+    public float consumptionRate = 1f;
+    public float regenRate = 1f;
     public float remainingBoost { get; private set; }
 
     void Start()
     {
+        consumptionRate = (int)GameManager.instance.difficulty + 1;
+
         remainingBoost = maxBoost;
         BoostImageTransform = BoostImage.rectTransform;
         BoostImageTransform.sizeDelta = new Vector2(BoostImageTransform.sizeDelta.x, remainingBoost);
@@ -41,6 +45,16 @@ public class ThrusterBoost : MonoBehaviour
     public void UpdateActiveThrusters(int thrusterCount)
     {
         activeThrusters += thrusterCount;
+    }
+
+    public bool BoostAvailable()
+    {
+        if(remainingBoost / maxBoost > boostAvailableThreshold)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private void UseBoost(int activeThrusters)

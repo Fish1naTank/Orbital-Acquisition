@@ -133,7 +133,15 @@ public class PlaneOrbitController : MonoBehaviour
             ActiveBoost(false);
 
             thusterBoost.UpdateActiveThrusters(1);
-            return moveSpeed * boostMultiplier;
+
+            if (thusterBoost.BoostAvailable())
+            {
+                return moveSpeed * boostMultiplier;
+            }
+            else
+            {
+                return moveSpeed;
+            }
         }
 
         return moveSpeed;
